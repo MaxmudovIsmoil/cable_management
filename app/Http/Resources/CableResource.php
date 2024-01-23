@@ -18,7 +18,7 @@ class CableResource extends JsonResource
             'id' => $this->id,
             "user_id" => $this->user_id,
             "user" => $this->user->name,
-            "name_of_type" => $this->name_of_type,
+            "name" => $this->name,
             "remain_stock" => $this->remain_stock,
             "purpose" => $this->purpose,
             "expected_delivery" => $this->expected_delivery,

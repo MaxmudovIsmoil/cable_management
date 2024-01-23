@@ -18,11 +18,20 @@ class CableController extends Controller
         return response()->success($this->service->list());
     }
 
+    public function getOne(int $id)
+    {
+        try {
+            return response()->success($this->service->one($id));
+        }
+        catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
+    }
+
     public function store(CableRequest $request): JsonResponse
     {
         try {
             $result = $this->service->create($request->validated());
-
             return response()->success($result);
         }
         catch (\Exception $e) {
@@ -34,7 +43,6 @@ class CableController extends Controller
     {
         try {
             $result = $this->service->update($id, $request->validated());
-
             return response()->success($result);
         }
         catch (\Exception $e) {

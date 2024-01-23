@@ -8,7 +8,6 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -36,15 +35,15 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request): JsonResponse
     {
-        $result = $this->service->register($request->validated());
-
-        return response()->success(data: $result, code: 201);
+        try {
+            $result = $this->service->register($request->validated());
+            return response()->success(data: $result, code: 201);
+        }
+        catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
     }
 
-    public function refreshToken(Request $request)
-    {
-        return response()->success(data: $this->service->refreshToken($request), code: 401);
-    }
 
     public function logout(): JsonResponse
     {
@@ -55,6 +54,11 @@ class AuthController extends Controller
 
     public function profile()
     {
-        return response()->success($this->service->profile());
+        try {
+            return response()->success($this->service->profile());
+        }
+        catch (\Exception $e) {
+            return response()->fail($e->getMessage());
+        }
     }
 }

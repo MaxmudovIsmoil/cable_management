@@ -47,6 +47,8 @@ class User extends Authenticatable
         'password',
         'status',
         'rule',
+        'can_create_cable',
+        'can_update_cable',
         'language',
         'deleted_at'
     ];

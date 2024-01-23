@@ -24,6 +24,7 @@ class RegisterRequest extends FormRequest
             'password' => 'required|min:3',
             'language' => 'required',
             'can_create_cable' => 'required',
+            'can_update_cable' => 'required'
         ];
     }
 

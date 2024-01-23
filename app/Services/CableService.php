@@ -18,6 +18,11 @@ class CableService
         return CableResource::collection($cable);
     }
 
+    public function one(int $id)
+    {
+        $cable = Cable::findOrfail($id);
+        return new CableResource($cable);
+    }
     public function create(array $data)
     {
         return Cable::create([

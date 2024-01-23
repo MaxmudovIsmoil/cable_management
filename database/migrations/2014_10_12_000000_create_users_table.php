@@ -24,6 +24,8 @@ return new class extends Migration
             $table->enum('rule', [1, 0])->default(0)->comment('1-admin, 0-user');
             $table->enum('can_create_cable', [1, 0])->default(0)
                 ->comment('1-create cable, 0-not create cable');
+            $table->enum('can_update_cable', [1, 0])->default(0)
+                ->comment('1-update cable, 0-not update cable');
             $table->rememberToken();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
@@ -40,16 +42,18 @@ return new class extends Migration
                 "rule" => 1,
                 "language" => 'en',
                 "can_create_cable" => 1,
+                "can_update_cable" => 1,
             ],
             [
                 "name" => 'User',
                 "email" => 'user@etc.uz',
                 "username" => 'user',
                 "password" => Hash::make(123),
-                'status' => '1',
+                'status' => 1,
                 'rule' => '0',
                 'language' => 'ru',
-                "can_create_cable" => '0',
+                "can_create_cable" => '1',
+                "can_update_cable" => '0',
             ],
         ]);
     }

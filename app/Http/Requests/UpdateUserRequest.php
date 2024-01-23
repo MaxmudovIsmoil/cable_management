@@ -20,8 +20,11 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|unique:users,email,'.$this->id,
-            'username' => 'required|min:9|unique:users,username,'.$this->id,
-            'password' => 'required|min:3',
+            'username' => 'required|unique:users,username,'.$this->id,
+            'password' => 'sometimes',
+            'language' => 'required',
+            'can_create_cable' => 'required',
+            'can_update_cable' => 'required'
         ];
     }
 

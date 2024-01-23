@@ -20,6 +20,7 @@ class UserLoginResource extends JsonResource
             "email" => $this->email,
             "language" => $this->language,
             "can_create_cable" => $this->can_create_cable,
+            "can_update_cable" => $this->can_update_cable,
         ];
     }
 }

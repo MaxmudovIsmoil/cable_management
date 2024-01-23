@@ -2,10 +2,10 @@
 
 namespace App\Exceptions;
 
-use http\Env\Response;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
-use Exception;
 
 
 class Handler extends ExceptionHandler
@@ -27,13 +27,24 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         if ($e instanceof NotFoundException) {
-            return response()->error($e->getMessage(), $e->getCode());
+            return response()->fail($e->getMessage(), $e->getCode());
         }
 
         if ($e instanceof UnauthorizedException) {
-            return response()->error($e->getMessage(), $e->getCode());
+            return response()->fail($e->getMessage(), $e->getCode());
         }
 
+
         return parent::render($request, $e);
+    }
+
+
+    public function register(): void
+    {
+        $this->renderable(function (NotFoundHttpException $e, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->fail('Record not found.', 404);
+            }
+        });
     }
 }

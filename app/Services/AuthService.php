@@ -29,15 +29,12 @@ class AuthService
             'username' => $data['username'],
             'password' => $password,
             'language' => $data['language'],
-            'can_create_cable' => $data['can_create_cable']
+            'can_create_cable' => $data['can_create_cable'],
+            'can_update_cable' => $data['can_update_cable'],
         ]);
 
-        $accessToken = $this->access_refresh_token($user)->access_token;
-        $refreshToken = $this->access_refresh_token($user)->refresh_token;
-
         return [
-            'access_token' => $accessToken,
-            'refresh_token' => $refreshToken,
+            'accessToken' => $this->token($user),
             'user' => $user->toArray()
         ];
     }
@@ -55,38 +52,18 @@ class AuthService
             throw new UnauthorizedException(message:'Unauthorized', code:401);
         }
 
-        $accessToken = $this->access_refresh_token($user)->access_token;
-        $refreshToken = $this->access_refresh_token($user)->refresh_token;
-
         return [
-            'access_token' => $accessToken,
-            'refresh_token' => $refreshToken,
+            'accessToken' => $this->token($user),
             'user' => new UserLoginResource($user)
         ];
     }
 
-    protected function access_refresh_token(object $user): object
+    public function token(object $user): string
     {
         $expiresAt = Carbon::now()->addMinutes(config('sanctum.expiration'));
-        $expiresRt = Carbon::now()->addMinutes(config('sanctum.rt_expiration'));
+        $accessToken = $user->createToken('access-token', [TokenAbility::ACCESS_TOKEN->value], $expiresAt);
 
-        $accessToken = $user->createToken('access_token', [TokenAbility::ACCESS_API->value], $expiresAt);
-        $refreshToken = $user->createToken('refresh_token', [TokenAbility::ISSUE_ACCESS_TOKEN->value], $expiresRt);
-
-        return (object)[
-            'access_token' => $accessToken->plainTextToken,
-            'refresh_token' => $refreshToken->plainTextToken,
-        ];
-    }
-
-    public function refreshToken(Request $request)
-    {
-        $expiresAt = Carbon::now()->addMinutes(config('sanctum.expiration'));
-        $access_token = $request->user()->createToken('access_token', [TokenAbility::ACCESS_API->value], $expiresAt);
-
-        return [
-            'access_token' => $access_token->plainTextToken
-        ];
+        return $accessToken->plainTextToken;
     }
 
 
